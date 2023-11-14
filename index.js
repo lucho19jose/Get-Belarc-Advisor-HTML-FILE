@@ -88,7 +88,7 @@ fs.readdir(folderPath, (err, files) => {
     /* get the main board specification from html */
     
     const mainBoardDiv = dom.window.document.querySelectorAll('.reportSection .reportSectionBody')[3]
-    const mainBoardInfo = mainBoardDiv.textContent.trim().substring(0, mainBoardDiv.textContent.trim().indexOf('Serial Number')).split(':')[1];
+    const mainBoardInfo = mainBoardDiv.innerHTML.trim().split('<br>')[0].split(':')[1];
     console.log(mainBoardInfo);
     
     /*  */
