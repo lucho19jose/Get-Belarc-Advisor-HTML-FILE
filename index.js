@@ -26,6 +26,26 @@ const folderPath = 'files';
 const workbook = new ExcelJS.Workbook();
 const worksheet = workbook.addWorksheet('Inventario');
 
+worksheet.addRow([
+  'Modelo',
+  'Marca',
+  'Numero de Serie',
+  'Motherboard',
+  'Procesador',
+  'Disco Duro 1',
+  'Disco Duro 2',
+  'Memoria RAM',
+  'Sistema Operativo',
+  'IP Address',
+  'MAC Address',
+  'Gerencia',
+  'Area',
+  'Jefatura',
+  'Usuario',
+  'Cargo',
+  'Estado',
+  'Hostname']);
+
 fs.readdir(folderPath, (err, files) => {
   files.forEach(file => {
     const filePath = path.join(folderPath, file);
@@ -99,11 +119,9 @@ fs.readdir(folderPath, (err, files) => {
     const deviceNameCell1 = deviceRow[0].parentNode.textContent.trim();
     let deviceNameCell2 = null;
     
-    const StorageTable = dom.window.document.querySelectorAll('table')[2];
-    if(StorageTable.rows.length > 4){
-      deviceNameCell2 = deviceRow[1].textContent.trim();
+    if(deviceRow[0].parentNode.nextElementSibling.textContent != "USB Attached Drives"){
+      deviceNameCell2 = deviceRow[0].parentNode.nextElementSibling.textContent.trim();
     }
-    
     // Log the device name to the console
     console.log(deviceNameCell1);
     console.log(deviceNameCell2);
@@ -137,9 +155,25 @@ fs.readdir(folderPath, (err, files) => {
 
     /* add row to worksheet */
     worksheet.addRow([
-      file,computerNameOnly, osInfo.substring(0, osInfo.indexOf('Version')),
-      PCModel, PCSerialNumber, processorInfo, mainBoardInfo, deviceNameCell1, deviceNameCell2,
-      RAM, IP.split(':')[1], MAC.split('Address:')[1]]);
+      PCModel,
+      PCModel.split(' ')[0],
+      PCSerialNumber,
+      mainBoardInfo,
+      processorInfo,
+      deviceNameCell1,
+      deviceNameCell2,
+      RAM,
+      osInfo.substring(0, osInfo.indexOf('Version')),
+      IP.split(':')[1],
+      MAC.split('Address:')[1],
+      file.split('-').length > 3 ? file.split('-')[0] : '',
+      file.split('-').length > 3 ? file.split('-')[1].trim() : file.split('-')[0].trim(),
+      '',
+      file.split('-').length > 3 ? file.split('-')[2].trim() : file.split('-')[1].trim(),
+      file.split('-').length > 3 ? (file.split('-')[3]).split('.')[0].trim() : (file.split('-')[2]).split('.')[0].trim(),
+      'activo',
+      computerNameOnly
+    ]);
   });
 });
 
@@ -152,4 +186,4 @@ setTimeout(() =>{
     console.log(error);
   });
 
-}, 5000)
+}, 1000)
